@@ -1,3 +1,5 @@
+<img src="assets/pfl-social-preview2.png" width="640" />
+
 # Photography Files Lister (pfl)
 
 This CLI tool lists photography files from well known major brands:
