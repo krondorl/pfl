@@ -7,6 +7,8 @@ This CLI tool lists photography files from well known major brands:
 - Fujifilm
 - Panasonic
 
+⚠️ **Warning: the app is not finished yet, it is under development...** ⚠️
+
 ## Extension Set
 
 ### RAW Extensions (core)
