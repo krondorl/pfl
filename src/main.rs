@@ -1,6 +1,7 @@
 // Copyright 2026 Adam Burucs. Licensed under custom Source Available License
 
-use clap::{Parser, ValueEnum};
+use clap::{CommandFactory, Parser, ValueEnum};
+use pfl::commands::print_info;
 
 const VERSION_INFO: &str = concat!(
     env!("CARGO_PKG_VERSION"),
@@ -40,5 +41,14 @@ enum SearchFormat {
 }
 
 fn main() {
-    println!("Hello, world!");
+    let args = Cli::parse();
+    let cmd = Cli::command();
+
+    print_info(cmd);
+
+    match args.format {
+        SearchFormat::All => println!("Searching all files..."),
+        SearchFormat::Raw => println!("Searching raw files..."),
+        SearchFormat::Compressed => println!("Searching compressed files..."),
+    }
 }

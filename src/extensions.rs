@@ -17,9 +17,8 @@ pub const COMPRESSED_EXTENSIONS: &[&str] = &["jpg", "jpeg", "heif", "heic"];
 
 /// Combined list (useful for simple scanning)
 pub const ALL_PHOTO_EXTENSIONS: &[&str] = &[
-    // RAW
-    "cr2", "cr3", "arw", "nef", "nrw", "raf", "rw2", // Compressed
-    "jpg", "jpeg", "heif", "heic",
+    "cr2", "cr3", "arw", "nef", "nrw", "raf", "rw2", // RAW
+    "jpg", "jpeg", "heif", "heic", // Compressed
 ];
 
 pub fn is_photo_file(path: &Path) -> Result<bool> {
