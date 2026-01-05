@@ -1,6 +1,7 @@
 // Copyright 2026 Adam Burucs. Licensed under custom Source Available License
 
 use crate::extensions::is_photo_file;
+use crate::search_format;
 use anyhow::Result;
 use indicatif::{ProgressBar, ProgressStyle};
 use rayon::prelude::*;
@@ -61,7 +62,7 @@ pub fn scan_dir(root: &Path) -> Result<Vec<PathBuf>> {
                 return None;
             }
 
-            match is_photo_file(path) {
+            match is_photo_file(path, &search_format::SearchFormat::All) {
                 Ok(true) => {
                     pb.println(path.display().to_string());
                     Some(path.to_path_buf())

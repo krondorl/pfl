@@ -1,7 +1,7 @@
 // Copyright 2026 Adam Burucs. Licensed under custom Source Available License
 
-use clap::{CommandFactory, Parser, ValueEnum};
-use pfl::commands::print_info;
+use clap::{CommandFactory, Parser};
+use pfl::{commands::print_info, search_format::SearchFormat};
 
 const VERSION_INFO: &str = concat!(
     env!("CARGO_PKG_VERSION"),
@@ -30,14 +30,6 @@ struct Cli {
     format: SearchFormat,
     /// Optional path to save the list
     path: Option<std::path::PathBuf>,
-}
-
-// Derived ValueEnum allows clap to treat these variants as valid CLI options
-#[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, ValueEnum)]
-enum SearchFormat {
-    All,
-    Raw,
-    Compressed,
 }
 
 fn main() {
