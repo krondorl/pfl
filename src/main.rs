@@ -21,13 +21,8 @@ struct Cli {
     /// The directory to list photo files from
     directory: std::path::PathBuf,
     /// Specify the search format
-    #[arg(
-        short, 
-        long, 
-        value_enum, 
-        default_value_t = SearchFormat::All
-    )]
-    format: SearchFormat,
+    #[arg(short, long, default_value = "all")]
+    format: String,
     /// Optional path to save the list
     path: Option<std::path::PathBuf>,
 }
@@ -38,9 +33,29 @@ fn main() {
 
     print_info(cmd);
 
-    match args.format {
-        SearchFormat::All => println!("Searching all files..."),
-        SearchFormat::Raw => println!("Searching raw files..."),
-        SearchFormat::Compressed => println!("Searching compressed files..."),
+    let mut search_format = SearchFormat::All;
+
+    match args.format.as_str() {
+        "all" => println!("Searching all files..."),
+        "raw" => {
+            println!("Searching raw files...");
+            search_format = SearchFormat::Raw;
+        }
+        "compressed" => {
+            println!("Searching compressed files...");
+            search_format = SearchFormat::Compressed;
+        }
+        _ => println!("Unknown format, defaulting to all files..."),
     }
+
+    println!("Listing photo files in directory: {:?}", args.directory);
+    println!();
+
+    let _photo_files = match pfl::commands::scan_dir(&args.directory, &search_format) {
+        Ok(files) => files,
+        Err(e) => {
+            eprintln!("Error scanning directory: {}", e);
+            return;
+        }
+    };
 }
