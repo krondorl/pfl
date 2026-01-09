@@ -1,7 +1,7 @@
 // Copyright 2026 Adam Burucs. Licensed under custom Source Available License
 
 use clap::{CommandFactory, Parser};
-use pfl::{commands::print_info, search_format::SearchFormat};
+use pfl::{commands::print_info, commands::process_scan_results, search_format::SearchFormat};
 
 const VERSION_INFO: &str = concat!(
     env!("CARGO_PKG_VERSION"),
@@ -15,13 +15,13 @@ const VERSION_INFO: &str = concat!(
 #[command(version = VERSION_INFO)]
 #[command(
     long_about = "This tool lists photo files in a specified directory.\nIt supports raw files and compressed files.\nRaw files include formats from Canon, Sony, Nikon, Fujifilm and Panasonic.",
-    after_help = "Examples:\n  pfl ./photos          List photo files in the 'photos' directory\n  pfl ./photos list.txt   List photo files and save to 'list.txt'"
+    after_help = "Examples:\n  pfl ./photos          List photo files in the 'photos' directory\n  pfl ./photos list.txt   List photo files and save to 'list.txt'\n  pfl --format raw ./photos list.txt   List raw photo files and save to 'list.txt'"
 )]
 struct Cli {
     /// The directory to list photo files from
     directory: std::path::PathBuf,
     /// Specify the search format
-    #[arg(short, long, default_value = "all")]
+    #[arg(short, long, default_value = "all", value_parser = ["all", "raw", "compressed"])]
     format: String,
     /// Optional path to save the list
     path: Option<std::path::PathBuf>,
@@ -48,14 +48,18 @@ fn main() {
         _ => println!("Unknown format, defaulting to all files..."),
     }
 
-    println!("Listing photo files in directory: {:?}", args.directory);
+    println!("Searching photo files in directory: {:?}", args.directory);
     println!();
 
-    let _photo_files = match pfl::commands::scan_dir(&args.directory, &search_format) {
-        Ok(files) => files,
-        Err(e) => {
-            eprintln!("Error scanning directory: {}", e);
-            return;
-        }
-    };
+    let mut print_to_screen = true;
+
+    if args.path.is_some() {
+        print_to_screen = false;
+    }
+
+    if let Err(e) =
+        process_scan_results(&args.directory, &search_format, print_to_screen, args.path)
+    {
+        eprintln!("Error: {}", e);
+    }
 }

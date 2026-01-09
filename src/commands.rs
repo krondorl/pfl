@@ -2,7 +2,7 @@
 
 use crate::extensions::is_photo_file;
 use crate::search_format::SearchFormat;
-use anyhow::Result;
+use anyhow::{Context, Result};
 use indicatif::{ProgressBar, ProgressStyle};
 use rayon::prelude::*;
 use std::path::{Path, PathBuf};
@@ -23,7 +23,11 @@ pub fn print_info(cmd: clap::Command) {
     println!();
 }
 
-pub fn scan_dir(root: &Path, search_format: &SearchFormat) -> Result<Vec<PathBuf>> {
+pub fn scan_dir(
+    root: &Path,
+    search_format: &SearchFormat,
+    print_to_screen: bool,
+) -> Result<Vec<PathBuf>> {
     let cancelled = Arc::new(AtomicBool::new(false));
 
     // Ctrl-C handler
@@ -64,7 +68,9 @@ pub fn scan_dir(root: &Path, search_format: &SearchFormat) -> Result<Vec<PathBuf
 
             match is_photo_file(path, search_format) {
                 Ok(true) => {
-                    pb.println(path.display().to_string());
+                    if print_to_screen {
+                        pb.println(path.display().to_string());
+                    }
                     Some(path.to_path_buf())
                 }
                 _ => None,
@@ -79,4 +85,33 @@ pub fn scan_dir(root: &Path, search_format: &SearchFormat) -> Result<Vec<PathBuf
     }
 
     Ok(results)
+}
+
+pub fn output_data(path: &std::path::PathBuf, file_list: Vec<PathBuf>) -> Result<()> {
+    let output = file_list
+        .iter()
+        .map(|d| d.display().to_string())
+        .collect::<Vec<_>>()
+        .join("\n");
+    std::fs::write(path, output).context(format!("Failed to write photo list to {:?}", path))?;
+    println!("\nPhoto list saved to: {:?}", path);
+    Ok(())
+}
+
+pub fn process_scan_results(
+    directory: &Path,
+    search_format: &SearchFormat,
+    print_to_screen: bool,
+    output_path: Option<PathBuf>,
+) -> Result<(), Box<dyn std::error::Error>> {
+    let files =
+        scan_dir(directory, search_format, print_to_screen).context("Failed to scan directory")?;
+
+    if let Some(path) = output_path {
+        output_data(&path, files).context(format!("Failed to save photo list to {:?}", path))?;
+    } else {
+        println!("\nTotal photo files found: {}", files.len());
+    }
+
+    Ok(())
 }
