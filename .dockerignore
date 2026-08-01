@@ -1,4 +1,5 @@
 assets/
+mock_files/
 
 # Rust build artifacts
 target/
