@@ -1,4 +1,4 @@
-# Source Available License (SAL) v1.0
+# Source Available License (SAL) v1.1
 
 Copyright (c) 2026 Adam Burucs
 All rights reserved.
@@ -9,7 +9,9 @@ All rights reserved.
 
 - "Software" means the source code, documentation, and any associated files in this repository.
 - "You" means any individual or legal entity that accesses the Software.
-- "Commercial Use" means use of the Software or derivatives primarily intended for commercial advantage or monetary compensation.
+- "Internal Use" means use of the Software within Your own personal, educational, research, evaluation, or internal business environment, without distributing, selling, sublicensing, monetizing, or offering the Software or derivative works to third parties.
+- "Commercialization" means selling, sublicensing, monetizing, distributing for a fee, offering as a paid product, or providing the Software or derivative works as part of a hosted service, SaaS, managed service, consulting deliverable, or other revenue-generating offering.
+- "Derivative Work" means any modification, adaptation, translation, extension, or other work based on the Software.
 
 --------------------------------------------------
 
@@ -18,8 +20,10 @@ All rights reserved.
 Subject to the terms of this license, You are granted a non-exclusive, non-transferable, revocable license to:
 
 - View, study, and analyze the Software
-- Modify the Software for personal, educational, or internal use
-- Run the Software for non-commercial purposes
+- Copy the Software for personal, educational, research, evaluation, or Internal Use
+- Modify the Software for personal, educational, research, evaluation, or Internal Use
+- Run the Software for personal, educational, research, evaluation, or Internal Use
+- Use the Software within a company, organization, or other legal entity for Internal Use
 
 --------------------------------------------------
 
@@ -27,10 +31,12 @@ Subject to the terms of this license, You are granted a non-exclusive, non-trans
 
 You may not, without prior written permission from the copyright holder:
 
-- Use the Software for Commercial Use
-- Sell, sublicense, or monetize the Software or any derivative work
-- Distribute the Software or derivative works in source or binary form
-- Offer the Software as part of a hosted service, SaaS, or paid product
+- Sell, sublicense, rent, lease, or otherwise commercially transfer the Software or any Derivative Work
+- Monetize the Software or any Derivative Work
+- Distribute the Software or any Derivative Work in source or binary form to third parties
+- Offer the Software or any Derivative Work as part of a hosted service, SaaS, managed service, paid product, or consulting deliverable
+- Use the Software or any Derivative Work to create a product or service that is sold, licensed, or monetized
+- Remove or alter copyright notices, license text, or attribution notices
 
 --------------------------------------------------
 
