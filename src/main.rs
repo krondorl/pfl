@@ -14,7 +14,7 @@ const VERSION_INFO: &str = concat!(
 #[derive(Parser)]
 #[command(version = VERSION_INFO)]
 #[command(
-    long_about = "This tool lists photo files in a specified directory.\nIt supports raw files and compressed files.\nRaw files include formats from Canon, Sony, Nikon, Fujifilm and Panasonic.",
+    long_about = "This tool lists photo files in a specified directory.\nIt supports raw files and compressed files.\nRaw files include formats from Canon, Sony, Nikon, Fujifilm, Panasonic, Pentax, Samsung, Olympus, Sigma, Hasselblad, Phase One, and Leica.",
     after_help = "Examples:\n  pfl ./photos          List photo files in the 'photos' directory\n  pfl ./photos list.txt   List photo files and save to 'list.txt'\n  pfl --format raw ./photos list.txt   List raw photo files and save to 'list.txt'"
 )]
 struct Cli {

@@ -2,12 +2,7 @@
 
 # Photography Files Lister (pfl)
 
-This CLI tool lists photography files from well known major brands:
-- Canon
-- Sony
-- Nikon
-- Fujifilm
-- Panasonic
+This CLI tool lists photography files from well known major brands.
 
 ⚠️ **Warning: the app is not finished yet, it is under development...** ⚠️
 
@@ -15,15 +10,23 @@ This CLI tool lists photography files from well known major brands:
 
 ### RAW Extensions (core)
 
-```
-.cr2
-.cr3
-.arw
-.nef
-.nrw
-.raf
-.rw2
-```
+| Extension | Brand / format                                |
+| --------- | --------------------------------------------- |
+| `.cr2`    | Canon                                         |
+| `.cr3`    | Canon                                         |
+| `.arw`    | Sony                                          |
+| `.nef`    | Nikon                                         |
+| `.nrw`    | Nikon                                         |
+| `.raf`    | Fujifilm                                      |
+| `.rw2`    | Panasonic                                     |
+| `.dng`    | Adobe Digital Negative, Leica, Pentax, mobile |
+| `.pef`    | Pentax                                        |
+| `.srw`    | Samsung                                       |
+| `.orf`    | Olympus / OM System                           |
+| `.x3f`    | Sigma                                         |
+| `.3fr`    | Hasselblad                                    |
+| `.iiq`    | Phase One                                     |
+| `.rwl`    | Leica                                         |
 
 ### Compressed Photo Extensions
 
@@ -47,3 +50,5 @@ Please see [the license file](LICENSE.md).
 
 ## History
 
+- Added more RAW format extensions in August 2026.
+- Started in January, 2026.

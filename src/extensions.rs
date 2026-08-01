@@ -12,6 +12,14 @@ pub const RAW_EXTENSIONS: &[&str] = &[
     "nef", "nrw", // Nikon
     "raf", // Fujifilm
     "rw2", // Panasonic
+    "dng", // Adobe Digital Negative, Leica, Pentax, mobile
+    "pef", // Pentax
+    "srw", // Samsung
+    "orf", // Olympus / OM System
+    "x3f", // Sigma
+    "3fr", // Hasselblad
+    "iiq", // Phase One
+    "rwl", // Leica
 ];
 
 /// All supported compressed photo extensions (lowercase, no dots)
@@ -19,7 +27,8 @@ pub const COMPRESSED_EXTENSIONS: &[&str] = &["jpg", "jpeg", "heif", "heic"];
 
 /// Combined list (useful for simple scanning)
 pub const ALL_PHOTO_EXTENSIONS: &[&str] = &[
-    "cr2", "cr3", "arw", "nef", "nrw", "raf", "rw2", // RAW
+    "cr2", "cr3", "arw", "nef", "nrw", "raf", "rw2", "dng", "pef", "srw", "orf", "x3f", "3fr",
+    "iiq", "rwl", // RAW
     "jpg", "jpeg", "heif", "heic", // Compressed
 ];
 
