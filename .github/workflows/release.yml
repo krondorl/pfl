@@ -3,7 +3,7 @@ name: Release
 on:
   push:
     tags:
-      - 'v*' # Triggers when you push a tag like v0.1.0
+      - "v*" # Triggers when pushing a tag such as v0.1.0
 
 permissions:
   contents: write
@@ -12,30 +12,45 @@ jobs:
   build:
     name: Build ${{ matrix.target }}
     runs-on: ${{ matrix.os }}
+
     strategy:
       fail-fast: false
       matrix:
         include:
-          # Linux Intel
+          # Linux x86-64, statically linked with MUSL
           - os: ubuntu-24.04
-            target: x86_64-unknown-linux-gnu
+            target: x86_64-unknown-linux-musl
             suffix: linux-x64
-          # Linux ARM (Native)
-          - os: ubuntu-24.04-arm
-            target: aarch64-unknown-linux-gnu
+            extension: ""
+            use_cross: true
+
+          # Linux ARM64, statically linked with MUSL
+          - os: ubuntu-24.04
+            target: aarch64-unknown-linux-musl
             suffix: linux-arm64
+            extension: ""
+            use_cross: true
+
           # macOS Intel
           - os: macos-15
             target: x86_64-apple-darwin
             suffix: macos-x64
-          # macOS ARM (M1/M2/M3)
+            extension: ""
+            use_cross: false
+
+          # macOS Apple Silicon
           - os: macos-14
             target: aarch64-apple-darwin
             suffix: macos-arm64
-          # Windows, Intel, Windows 10+
-          - os: windows-19
+            extension: ""
+            use_cross: false
+
+          # Windows x86-64
+          - os: windows-2022
             target: x86_64-pc-windows-msvc
             suffix: windows-x64
+            extension: ".exe"
+            use_cross: false
 
     steps:
       - name: Checkout code
@@ -46,40 +61,47 @@ jobs:
         with:
           targets: ${{ matrix.target }}
 
-      - name: Build Binary
+      - name: Install cross
+        if: matrix.use_cross
+        run: cargo install cross --locked
+
+      - name: Build Linux binary with cross
+        if: matrix.use_cross
+        run: cross build --release --target ${{ matrix.target }}
+
+      - name: Build native binary with Cargo
+        if: ${{ !matrix.use_cross }}
         run: cargo build --release --target ${{ matrix.target }}
 
-      - name: Prepare Assets (Rename & Checksum)
+      - name: Prepare release assets
         shell: bash
         run: |
-          # 1. Define naming variables
-          TAG_NAME=${{ github.ref_name }}
-          REPO_NAME=${{ github.event.repository.name }}
-          BASE_NAME="${REPO_NAME}-${{ matrix.suffix }}-${TAG_NAME}"
-          
-          # 2. Handle Windows vs Unix file movements
-          if [ "${{ matrix.os }}" = "windows-latest" ]; then
-            BIN_PATH="target/${{ matrix.target }}/release/${REPO_NAME}.exe"
-            FINAL_BIN="${BASE_NAME}.exe"
-          else
-            BIN_PATH="target/${{ matrix.target }}/release/${REPO_NAME}"
-            FINAL_BIN="${BASE_NAME}"
+          set -euo pipefail
+
+          TAG_NAME="${{ github.ref_name }}"
+          REPO_NAME="${{ github.event.repository.name }}"
+          EXTENSION="${{ matrix.extension }}"
+
+          BIN_PATH="target/${{ matrix.target }}/release/${REPO_NAME}${EXTENSION}"
+          FINAL_BIN="${REPO_NAME}-${{ matrix.suffix }}-${TAG_NAME}${EXTENSION}"
+
+          if [ ! -f "$BIN_PATH" ]; then
+            echo "Binary not found: $BIN_PATH"
+            exit 1
           fi
 
-          mv "$BIN_PATH" "./$FINAL_BIN"
+          mv "$BIN_PATH" "$FINAL_BIN"
 
-          # 3. Generate SHA-256 Checksum
           if command -v sha256sum >/dev/null 2>&1; then
-            sha256sum "$FINAL_BIN" > "$FINAL_BIN.sha256"
+            sha256sum "$FINAL_BIN" > "${FINAL_BIN}.sha256"
           else
-            shasum -a 256 "$FINAL_BIN" > "$FINAL_BIN.sha256"
+            shasum -a 256 "$FINAL_BIN" > "${FINAL_BIN}.sha256"
           fi
 
-          # 4. Pass paths to upload step
-          echo "ASSET_BIN=$FINAL_BIN" >> $GITHUB_ENV
-          echo "ASSET_SHA=$FINAL_BIN.sha256" >> $GITHUB_ENV
+          echo "ASSET_BIN=$FINAL_BIN" >> "$GITHUB_ENV"
+          echo "ASSET_SHA=${FINAL_BIN}.sha256" >> "$GITHUB_ENV"
 
-      - name: Upload to Release
+      - name: Upload assets to GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           files: |
